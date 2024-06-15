@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hackathon_project/screens/home_screen.dart';
+
 // Make sure to import the HomeScreen widget
 
 class SplashScreen extends StatefulWidget {
@@ -41,29 +42,14 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
       body: Container(
         width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.blue.shade900,
-              Colors.blue.shade800,
-              Colors.blue.shade700,
-              Colors.blue.shade600,
-              Colors.blue.shade500,
-            ],
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-          ),
-        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Display the app's logo
-            Image.asset("assets/messages.png", height: 250, width: 250),
-            const SizedBox(
-                height: 20), // Add some spacing between the image and text
-            // Display the app's name
+            Image.asset("assets/images/carrental.png", height: 250, width: 250),
+            const SizedBox(height: 20),
             const Text(
-              "M E S S A G E",
+              "Rental App",
               style: TextStyle(
                 color: Colors.black38,
                 fontWeight: FontWeight.bold,
