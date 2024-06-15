@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_project/onboarding_screen2.dart';
+import 'package:hackathon_project/screens/booking_screen.dart';
+import 'package:hackathon_project/screens/home_screen.dart';
 import 'package:hackathon_project/screens/onboarding_screen1.dart';
 
 void main() {
@@ -14,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: OnboardingScreen1(),
+      home: BookingScreen(),
     );
   }
 }
