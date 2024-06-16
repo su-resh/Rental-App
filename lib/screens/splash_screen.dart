@@ -49,9 +49,9 @@ class _SplashScreenState extends State<SplashScreen>
           ),
           const SizedBox(height: 5),
           const Text(
-            "Sajilo Rental",
+            "Rent Car",
             style: TextStyle(
-              color: Colors.black38,
+              color: Colors.white,
               fontWeight: FontWeight.bold,
               fontSize: 40,
             ),
