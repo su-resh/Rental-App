@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hackathon_project/screens/home_screen.dart';
 import 'package:hackathon_project/screens/login/login_signup_screen.dart';
 
 class OnboardingScreen3 extends StatelessWidget {

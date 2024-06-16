@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hackathon_project/screens/account_screen.dart';
+import 'package:hackathon_project/screens/home_screen.dart';
 import 'package:hackathon_project/screens/login/login_signup_screen.dart';
 
 import 'onboarding_screen2.dart';

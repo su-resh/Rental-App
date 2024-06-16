@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:hackathon_project/screens/home_screen.dart';
 import 'package:hackathon_project/screens/onboarding_screen1.dart';
 
-// Make sure to import the HomeScreen widget
-
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -20,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen>
     // Set the UI to immersive mode
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
 
-    // Delay for 3 seconds before navigating to the HomeScreen
+    // Delay for 3 seconds before navigating to the OnboardingScreen1
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => OnboardingScreen1()),
@@ -40,28 +37,26 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: Colors.orange,
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.network(
-              "https://i.postimg.cc/SQM5Ghk7/Untitled-design.png",
-              height: 250,
+    return Container(
+      color: Colors.orange,
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.network(
+            "https://i.postimg.cc/SQM5Ghk7/Untitled-design.png",
+            height: 250,
+          ),
+          const SizedBox(height: 5),
+          const Text(
+            "Sajilo Rental",
+            style: TextStyle(
+              color: Colors.black38,
+              fontWeight: FontWeight.bold,
+              fontSize: 40,
             ),
-            const SizedBox(height: 5),
-            const Text(
-              "Sajilo Rental",
-              style: TextStyle(
-                color: Colors.black38,
-                fontWeight: FontWeight.bold,
-                fontSize: 40,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

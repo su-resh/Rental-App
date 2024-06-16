@@ -1,15 +1,16 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:hackathon_project/screens/account_screen.dart';
 import 'package:hackathon_project/screens/booking_screen.dart';
+// import 'package:hackathon_project/screens/login/login_signup_screen.dart';
+import 'package:hackathon_project/screens/home_screen.dart';
 import 'package:hackathon_project/screens/login/login_signup_screen.dart';
-// import 'package:hackathon_project/screens/home_screen.dart';
-import 'package:hackathon_project/screens/splash_screen.dart';
-import 'package:hackathon_project/screens/weather%20Screen/weather_screen.dart';
+// import 'package:hackathon_project/screens/splash_screen.dart';
+import 'package:hackathon_project/screens/summary.dart';
 
 void main() {
-  runApp(const MaterialApp(
+  runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: SplashScreen(),
+    home: SummaryPage(),
   ));
 }
 
@@ -23,12 +24,10 @@ class RentalApp extends StatefulWidget {
 class _RentalAppState extends State<RentalApp> {
   int _selectedIndex = 0;
 
-  // for the bottom navigation bar
   static List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
-    WeatherScreen(),
     BookingScreen(),
     LoginScreen(),
+    HomeScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -45,21 +44,21 @@ class _RentalAppState extends State<RentalApp> {
         children: _widgetOptions,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: _getIconColor(0)),
+            icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.book, color: _getIconColor(1)),
+            icon: Icon(Icons.book),
             label: 'Booking',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.login, color: _getIconColor(2)),
+            icon: Icon(Icons.login),
             label: 'Login',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: _getIconColor(3)),
+            icon: Icon(Icons.person),
             label: 'Profile',
           ),
         ],
@@ -68,9 +67,5 @@ class _RentalAppState extends State<RentalApp> {
         onTap: _onItemTapped,
       ),
     );
-  }
-
-  Color _getIconColor(int index) {
-    return _selectedIndex == index ? Colors.orange : Colors.black;
   }
 }

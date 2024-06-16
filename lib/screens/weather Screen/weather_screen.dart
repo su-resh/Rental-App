@@ -48,6 +48,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, // Remove back button
         title: const Text('Weather',
             style: TextStyle(color: Color.fromARGB(255, 103, 102, 102))),
         centerTitle: true,

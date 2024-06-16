@@ -38,6 +38,8 @@ dependencies:
   masonry_grid: ^1.0.0
   firebase: ^9.0.3
   http: ^0.13.6
+  khalti_flutter: ^2.2.1
+  imepay_merchant_sdk: ^0.0.1-alpha.3
 
 dev_dependencies:
   flutter_test:

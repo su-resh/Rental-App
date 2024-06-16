@@ -25,16 +25,14 @@ class _BookingScreenState extends State<BookingScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bookings'),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {},
-        ),
+        automaticallyImplyLeading: false, // Remove back button
+        elevation: 0,
+        backgroundColor: Colors.transparent,
         bottom: TabBar(
           controller: _tabController,
-          labelColor: Colors.red,
+          labelColor: Colors.orange,
           unselectedLabelColor: Colors.grey,
-          indicatorColor: Colors.red,
+          indicatorColor: Colors.orange,
           tabs: [
             Tab(text: 'Upcoming'),
             Tab(text: 'Completed'),
@@ -115,15 +113,15 @@ class BookingCard extends StatelessWidget {
                   child: Text('Cancel'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
-                    foregroundColor: Colors.red,
-                    side: BorderSide(color: Colors.red),
+                    foregroundColor: Colors.orange,
+                    side: BorderSide(color: Colors.orange),
                   ),
                 ),
                 ElevatedButton(
                   onPressed: () {},
                   child: Text('E-Ticket'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+                    backgroundColor: Colors.orange,
                   ),
                 ),
               ],
