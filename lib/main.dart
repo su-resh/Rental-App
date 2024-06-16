@@ -1,17 +1,28 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hackathon_project/screens/khalti_screen.dart';
+import 'package:khalti_flutter/khalti_flutter.dart';
+
 import 'package:hackathon_project/screens/booking_screen.dart';
-// import 'package:hackathon_project/screens/login/login_signup_screen.dart';
 import 'package:hackathon_project/screens/home_screen.dart';
 import 'package:hackathon_project/screens/login/login_signup_screen.dart';
-// import 'package:hackathon_project/screens/splash_screen.dart';
-import 'package:hackathon_project/screens/summary.dart';
+import 'package:hackathon_project/screens/splash_screen.dart';
 
 void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: SummaryPage(),
-  ));
+  runApp(
+    KhaltiScope(
+      publicKey: 'test_public_key_a0e140de089d49198817b96f2d222588',
+      builder: (context, navigatorKey) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          navigatorKey: navigatorKey,
+          localizationsDelegates: const [
+            KhaltiLocalizations.delegate,
+          ],
+          home: SplashScreen(), // Set SplashScreen as the initial route
+        );
+      },
+    ),
+  );
 }
 
 class RentalApp extends StatefulWidget {
@@ -25,9 +36,10 @@ class _RentalAppState extends State<RentalApp> {
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
+    HomeScreen(),
     BookingScreen(),
     LoginScreen(),
-    HomeScreen(),
+    SplashScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -58,8 +70,8 @@ class _RentalAppState extends State<RentalApp> {
             label: 'Login',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+            icon: Icon(Icons.payment),
+            label: 'Payment',
           ),
         ],
         currentIndex: _selectedIndex,

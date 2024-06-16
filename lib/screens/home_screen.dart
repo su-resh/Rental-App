@@ -1,6 +1,14 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_project/screens/booking_screen.dart';
+import 'package:hackathon_project/screens/summary.dart';
 import 'package:hackathon_project/screens/weather%20Screen/weather_screen.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import '../model/car_model.dart';
+
+void main() => runApp(const MaterialApp(home: HomeScreen()));
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -23,8 +31,11 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _currentIndex = index;
     });
-    _pageController.animateToPage(index,
-        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
@@ -46,9 +57,9 @@ class _HomeScreenState extends State<HomeScreen> {
             _currentIndex = index;
           });
         },
-        children: const [
+        children: [
           HomePageContent(),
-          BookingPage(),
+          BookingScreen(),
           WeatherScreen(),
         ],
       ),
@@ -65,8 +76,8 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Booking',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Account',
+            icon: Icon(Icons.cloud),
+            label: 'Weather',
           ),
         ],
       ),
@@ -74,86 +85,112 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class HomePageContent extends StatelessWidget {
+class HomePageContent extends StatefulWidget {
   const HomePageContent({Key? key}) : super(key: key);
+
+  @override
+  _HomePageContentState createState() => _HomePageContentState();
+}
+
+class _HomePageContentState extends State<HomePageContent> {
+  late Future<List<Car>> cars;
+
+  @override
+  void initState() {
+    super.initState();
+    cars = fetchCars();
+  }
+
+  Future<List<Car>> fetchCars() async {
+    final response = await http.get(Uri.parse(
+        'https://raw.githubusercontent.com/su-resh/id_pass/main/cars.json'));
+
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse.map((car) => Car.fromJson(car)).toList();
+    } else {
+      throw Exception('Failed to load cars');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.location_city_rounded,
-                  color: Color.fromARGB(255, 109, 85, 85),
-                  size: 24,
-                ),
-              ),
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Your location",
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 109, 85, 85),
-                    ),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.location_city_rounded,
+                    color: Color.fromARGB(255, 109, 85, 85),
+                    size: 24,
                   ),
-                  Text(
-                    "Pokhara",
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 109, 85, 85),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(
-                  Icons.notifications_none,
-                  color: Color.fromARGB(255, 109, 85, 85),
                 ),
-                onPressed: () {},
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          TextField(
-            decoration: InputDecoration(
-              hintText: 'Search your favorite Cars',
-              prefixIcon: const Icon(Icons.search),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30),
-                borderSide: BorderSide.none,
-              ),
-              fillColor: Colors.grey[200],
-              filled: true,
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Your location",
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 109, 85, 85),
+                      ),
+                    ),
+                    Text(
+                      "Pokhara",
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 109, 85, 85),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(
+                    Icons.notifications_none,
+                    color: Color.fromARGB(255, 109, 85, 85),
+                  ),
+                  onPressed: () {},
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 20),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Top Brands',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+            const SizedBox(height: 10),
+            TextField(
+              decoration: InputDecoration(
+                hintText: 'Search your favorite Cars',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: BorderSide.none,
                 ),
+                fillColor: Colors.grey[200],
+                filled: true,
               ),
-              Text(
-                'View all',
-                style: TextStyle(color: Colors.orange),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          const Row(
+            ),
+            const SizedBox(height: 20),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Top Brands',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                Text(
+                  'View all',
+                  style: TextStyle(color: Colors.orange),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Image(
@@ -176,10 +213,10 @@ class HomePageContent extends StatelessWidget {
                       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkwuMOG80bPYHyqVRXUDy1En-J56S9fVF2Vg&s'),
                   width: 40,
                 ),
-              ]),
-          const SizedBox(height: 20),
-          const SingleChildScrollView(
-            child: Row(
+              ],
+            ),
+            const SizedBox(height: 20),
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
@@ -195,158 +232,136 @@ class HomePageContent extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 10),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 10, top: 10, bottom: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Card(
-                    shadowColor: Colors.black,
-                    child: Column(
-                      children: [
-                        Image.network(
-                          'https://i.postimg.cc/154RvsPX/Designer.jpg',
-                          width: 100,
-                        ),
-                        const Text('Car Name',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        const Text('Price'),
-                      ],
+            const SizedBox(height: 10),
+            FutureBuilder<List<Car>>(
+              future: cars,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No data available'));
+                } else {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(right: 10, top: 10, bottom: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: snapshot.data!.map((car) {
+                          return CarCard(
+                            imageUrl: car.image,
+                            carName: car.title,
+                            price: car.startProduction?.toString() ?? '',
+                          );
+                        }).toList(),
+                      ),
                     ),
+                  );
+                }
+              },
+            ),
+            const SizedBox(height: 20),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Available Near you',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
                   ),
-                  Card(
-                    shadowColor: Colors.black,
-                    child: Column(
-                      children: [
-                        Image.network(
-                          'https://i.postimg.cc/154RvsPX/Designer.jpg',
-                          width: 100,
-                        ),
-                        const Text('Car Name',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        const Text('Price'),
-                      ],
-                    ),
-                  ),
-                  Card(
-                    shadowColor: Colors.black,
-                    child: Column(
-                      children: [
-                        Image.network(
-                          'https://i.postimg.cc/154RvsPX/Designer.jpg',
-                          width: 100,
-                        ),
-                        const Text('Car Name',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        const Text('Price'),
-                      ],
-                    ),
-                  ),
-                  Card(
-                    shadowColor: Colors.black,
-                    child: Column(
-                      children: [
-                        Image.network(
-                          'https://i.postimg.cc/154RvsPX/Designer.jpg',
-                          width: 100,
-                        ),
-                        const Text('Car Name',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        const Text('Price'),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
+                Text(
+                  'View all',
+                  style: TextStyle(color: Colors.orange),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            FutureBuilder<List<Car>>(
+              future: cars,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No data available'));
+                } else {
+                  return Column(
+                    children: snapshot.data!.map((car) {
+                      return CarCard(
+                        imageUrl: car.image,
+                        carName: car.title,
+                        price: car.startProduction?.toString() ?? '',
+                      );
+                    }).toList(),
+                  );
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CarCard extends StatelessWidget {
+  final String imageUrl;
+  final String carName;
+  final String price;
+
+  const CarCard({
+    Key? key,
+    required this.imageUrl,
+    required this.carName,
+    required this.price,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SummaryPage(),
+                ),
+              );
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.network(
+                imageUrl,
+                width: 180,
+                height: 120,
+                fit: BoxFit.cover,
               ),
             ),
           ),
-          const SizedBox(height: 20),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Available Near you',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              Text(
-                'View all',
-                style: TextStyle(color: Colors.orange),
-              ),
-            ],
+          const SizedBox(height: 8),
+          Text(
+            carName,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          const SizedBox(height: 10),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 10, top: 10, bottom: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Card(
-                    shadowColor: Colors.black,
-                    child: Column(
-                      children: [
-                        Image.network(
-                          'https://i.postimg.cc/154RvsPX/Designer.jpg',
-                          width: 100,
-                        ),
-                        const Text('Car Name',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        const Text('Price'),
-                      ],
-                    ),
-                  ),
-                  Card(
-                    shadowColor: Colors.black,
-                    child: Column(
-                      children: [
-                        Image.network(
-                          'https://i.postimg.cc/154RvsPX/Designer.jpg',
-                          width: 100,
-                        ),
-                        const Text('Car Name',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        const Text('Price'),
-                      ],
-                    ),
-                  ),
-                  Card(
-                    shadowColor: Colors.black,
-                    child: Column(
-                      children: [
-                        Image.network(
-                          'https://i.postimg.cc/154RvsPX/Designer.jpg',
-                          width: 100,
-                        ),
-                        const Text('Car Name',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        const Text('Price'),
-                      ],
-                    ),
-                  ),
-                  Card(
-                    shadowColor: Colors.black,
-                    child: Column(
-                      children: [
-                        Image.network(
-                          'https://i.postimg.cc/154RvsPX/Designer.jpg',
-                          width: 100,
-                        ),
-                        const Text('Car Name',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        const Text('Price'),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+          const SizedBox(height: 4),
+          Text(
+            price,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.orange,
             ),
           ),
         ],
@@ -354,23 +369,3 @@ class HomePageContent extends StatelessWidget {
     );
   }
 }
-
-class BookingPage extends StatelessWidget {
-  const BookingPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BookingScreen();
-  }
-}
-
-class WeatherPage extends StatelessWidget {
-  const WeatherPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return WeatherScreen();
-  }
-}
-
-void main() => runApp(const MaterialApp(home: HomeScreen()));

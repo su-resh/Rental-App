@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hackathon_project/screens/khalti_screen.dart';
 
 class SummaryPage extends StatelessWidget {
   @override
@@ -9,7 +10,7 @@ class SummaryPage extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            // Handle back button press
+            Navigator.pop(context); // Handle back button press
           },
         ),
       ),
@@ -28,8 +29,8 @@ class SummaryPage extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Image.asset(
-                          'assets/car.jpeg',
+                        Image.network(
+                          "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Vintage_car_at_the_Wirral_Bus_%26_Tram_Show_-_DSC03336.JPG/400px-Vintage_car_at_the_Wirral_Bus_%26_Tram_Show_-_DSC03336.JPG",
                           height: 80,
                           width: 80,
                           fit: BoxFit.cover,
@@ -61,8 +62,10 @@ class SummaryPage extends StatelessWidget {
                     SizedBox(height: 16),
                     _buildInfoRow('Starting Date & Time', 'Feb 10 | 10:00 AM'),
                     _buildInfoRow('Ending Date & Time', 'Feb 14 | 10:00 AM'),
-                    _buildInfoRow('Delivery Location', 'Airport, Pokhara-8, Nepal'),
-                    _buildInfoRow('Return Location', 'Airport, Pokhara-8, Nepal'),
+                    _buildInfoRow(
+                        'Delivery Location', 'Airport, Pokhara-8, Nepal'),
+                    _buildInfoRow(
+                        'Return Location', 'Airport, Pokhara-8, Nepal'),
                     _buildInfoRow('Renter', 'Suresh Subedi'),
                     _buildInfoRow('Rent type', 'Self Driving'),
                   ],
@@ -78,7 +81,11 @@ class SummaryPage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-              
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => KhaltiPaymentScreen()),
+                  );
                 },
                 child: Text('Proceed to Pay'),
                 style: ElevatedButton.styleFrom(
