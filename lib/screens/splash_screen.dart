@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hackathon_project/screens/home_screen.dart';
+// import 'package:hackathon_project/screens/home_screen.dart';
+import 'package:hackathon_project/screens/onboarding_screen1.dart';
 
 // Make sure to import the HomeScreen widget
 
@@ -22,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen>
     // Delay for 3 seconds before navigating to the HomeScreen
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        MaterialPageRoute(builder: (_) => OnboardingScreen1()),
       );
     });
   }
@@ -41,15 +42,18 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        color: Colors.orange,
         width: double.infinity,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Display the app's logo
-            Image.asset("assets/images/carrental.png", height: 250, width: 250),
-            const SizedBox(height: 20),
+            Image.network(
+              "https://i.postimg.cc/SQM5Ghk7/Untitled-design.png",
+              height: 250,
+            ),
+            const SizedBox(height: 5),
             const Text(
-              "Rental App",
+              "Sajilo Rental",
               style: TextStyle(
                 color: Colors.black38,
                 fontWeight: FontWeight.bold,
