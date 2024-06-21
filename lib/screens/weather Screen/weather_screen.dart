@@ -3,9 +3,12 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 void main() {
-  runApp(const MaterialApp(
+  runApp( MaterialApp(
     debugShowCheckedModeBanner: false,
     home: WeatherScreen(),
+    theme: ThemeData(
+      primarySwatch: Colors.orange,
+    ),
   ));
 }
 
@@ -18,13 +21,20 @@ class WeatherScreen extends StatefulWidget {
 
 class _WeatherScreenState extends State<WeatherScreen> {
   final String apiKey = '436123b3e6bd4292194ce68d8e469576';
-  final String defaultCity = 'Pokhara'; // Default city
+  final List<String> cities = [
+    'Pokhara',
+    'Kathmandu',
+    'Lalitpur',
+    'Biratnagar',
+    'Chitwan'
+  ];
+  String selectedCity = 'Pokhara'; // Default city
   late Future<Map<String, dynamic>> _weatherData;
 
   @override
   void initState() {
     super.initState();
-    _weatherData = getWeather(defaultCity);
+    _weatherData = getWeather(selectedCity);
   }
 
   Future<Map<String, dynamic>> getWeather(String city) async {
@@ -44,26 +54,52 @@ class _WeatherScreenState extends State<WeatherScreen> {
     }
   }
 
+  void _onCityChanged(String? newCity) {
+    setState(() {
+      selectedCity = newCity!;
+      _weatherData = getWeather(selectedCity);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false, // Remove back button
         title: const Text('Weather',
-            style: TextStyle(color: Color.fromARGB(255, 103, 102, 102))),
+            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
         centerTitle: true,
       ),
-      body: FutureBuilder<Map<String, dynamic>>(
-        future: _weatherData,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            return WeatherView(weatherData: snapshot.data!);
-          }
-        },
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: DropdownButton<String>(
+              value: selectedCity,
+              onChanged: _onCityChanged,
+              items: cities.map((String city) {
+                return DropdownMenuItem<String>(
+                  value: city,
+                  child: Text(city),
+                );
+              }).toList(),
+            ),
+          ),
+          Expanded(
+            child: FutureBuilder<Map<String, dynamic>>(
+              future: _weatherData,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  return WeatherView(weatherData: snapshot.data!);
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -74,12 +110,30 @@ class WeatherView extends StatelessWidget {
 
   const WeatherView({Key? key, required this.weatherData}) : super(key: key);
 
+  IconData _getWeatherIcon(String description) {
+    switch (description.toLowerCase()) {
+      case 'clear':
+        return Icons.wb_sunny;
+      case 'clouds':
+        return Icons.cloud;
+      case 'rain':
+        return Icons.beach_access;
+      case 'snow':
+        return Icons.ac_unit;
+      case 'thunderstorm':
+        return Icons.flash_on;
+      default:
+        return Icons.wb_cloudy;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final cityName = weatherData['name'];
     final temp =
         (weatherData['main']['temp'] - 273.15).round(); // Kelvin to Celsius
     final description = weatherData['weather'][0]['main'];
+    final icon = _getWeatherIcon(description);
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -94,7 +148,7 @@ class WeatherView extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Icon(Icons.thermostat_rounded, size: 40),
+              Icon(icon, size: 40),
               const SizedBox(width: 10),
               Text(
                 '$temp°C',
