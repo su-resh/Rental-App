@@ -1,6 +1,4 @@
-Here’s a description of your hackathon project focused on a car rental app with Khalti payment integration:
 
----
 
 **Project Name:** **RentEz – Simplified Car Rental**
 
